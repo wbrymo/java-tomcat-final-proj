@@ -19,32 +19,33 @@ public class Calculator extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-
         try {
             int a1 = Integer.parseInt(request.getParameter("n1"));
             int a2 = Integer.parseInt(request.getParameter("n2"));
             String operation = request.getParameter("operation");
 
-            out.println("<html><body>");
+            String result = "";
             if ("add".equals(operation)) {
-                out.println("<h1>Addition Result:</h1>" + addFucn(a1, a2));
+                result = "Addition Result: " + addFucn(a1, a2);
             } else if ("sub".equals(operation)) {
-                out.println("<h1>Subtraction Result:</h1>" + subFucn(a1, a2));
+                result = "Subtraction Result: " + subFucn(a1, a2);
             } else if ("mul".equals(operation)) {
-                out.println("<h1>Multiplication Result:</h1>" + mulFucn(a1, a2));
+                result = "Multiplication Result: " + mulFucn(a1, a2);
             } else {
-                out.println("<h1>Error: No valid operation selected</h1>");
+                result = "No valid operation selected.";
             }
-            out.println("</body></html>");
 
-        } catch (NumberFormatException e) {
-            out.println("<p>Error: Invalid number format.</p>");
+            // Store result in request scope
+            request.setAttribute("calcResult", result);
+
+            // Forward to index.jsp
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
+
         } catch (Exception e) {
-            out.println("<p>Error occurred: " + e.getMessage() + "</p>");
-        } finally {
-            out.close();
+            request.setAttribute("calcResult", "Error: " + e.getMessage());
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
         }
     }
 }
