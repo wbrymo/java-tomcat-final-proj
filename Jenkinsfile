@@ -46,6 +46,9 @@ pipeline {
     post {
         always {
             cleanWs()
+            // Print deployment clickable link
+            echo '🚀 Access the deployed Calculator app at:'
+            echo '🔗 http://54.162.69.67:8081/WebAppCal/'
         }
     }
 }
