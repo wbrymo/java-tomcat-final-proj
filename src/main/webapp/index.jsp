@@ -7,6 +7,11 @@
 <body>
 <h1 style="text-align:center">Calculator</h1>
 
+<!-- Display calculation result if present -->
+<c:if test="${not empty calcResult}">
+    <h2>${calcResult}</h2>
+</c:if>
+
 <form action="firstHomePage" method="get">
     <label>First number:</label>
     <input type="text" name="n1" />
@@ -14,22 +19,11 @@
     <label>Second number:</label>
     <input type="text" name="n2" />
     <br />
-
     <div>
-        <label>
-            <input type="radio" name="operation" value="add" />Addition
-        </label>
-        <br />
-        <label>
-            <input type="radio" name="operation" value="sub" />Difference
-        </label>
-        <br />
-        <label>
-            <input type="radio" name="operation" value="mul" />Product
-        </label>
-        <br />
+        <label><input type="radio" name="operation" value="add" />Addition</label><br />
+        <label><input type="radio" name="operation" value="sub" />Difference</label><br />
+        <label><input type="radio" name="operation" value="mul" />Product</label><br />
     </div>
-
     <input type="submit" value="Submit" />
 </form>
 
