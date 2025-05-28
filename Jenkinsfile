@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'wbrymo/java-calculator'
+        IMAGE_NAME = 'wbrymo/java-webappcal'   // New, unique image name
     }
 
     stages {
@@ -33,8 +33,11 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh '''
-                    docker rm -f calculator-container || true
-                    docker run -d --name calculator-container -p 8080:8080 ${IMAGE_NAME}:latest
+                    # Stop and remove existing container if it exists
+                    docker rm -f calc-container || true
+
+                    # Run container with updated port mapping
+                    docker run -d --name calc-container -p 8081:8080 ${IMAGE_NAME}:latest
                 '''
             }
         }
@@ -46,4 +49,3 @@ pipeline {
         }
     }
 }
-
