@@ -1,4 +1,3 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,14 +6,14 @@
 </head>
 <body>
 
-<!-- Show only the result if present -->
-<c:if test="${not empty calcResult}">
-    <h1>${calcResult}</h1>
-</c:if>
+<!-- Display calculation result if present -->
+<% if (request.getAttribute("calcResult") != null) { %>
+    <h1><%= request.getAttribute("calcResult") %></h1>
+<% } %>
 
 <form action="firstHomePage" method="get">
-    <input type="text" name="n1" value="${n1}" placeholder="First number" />
-    <input type="text" name="n2" value="${n2}" placeholder="Second number" />
+    <input type="text" name="n1" value="<%= request.getAttribute("n1") != null ? request.getAttribute("n1") : "" %>" placeholder="First number" />
+    <input type="text" name="n2" value="<%= request.getAttribute("n2") != null ? request.getAttribute("n2") : "" %>" placeholder="Second number" />
     <div>
         <label><input type="radio" name="operation" value="add" />Addition</label>
         <label><input type="radio" name="operation" value="sub" />Difference</label>
