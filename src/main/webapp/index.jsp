@@ -31,7 +31,6 @@
     <input type="text" name="n2" value="<%= request.getAttribute("n2") != null ? request.getAttribute("n2") : "" %>" />
     <br />
 
-    <p>Select operation:</p>
     <ul>
         <li><label><input type="radio" name="operation" value="add" /> Addition</label></li>
         <li><label><input type="radio" name="operation" value="sub" /> Difference</label></li>
