@@ -26,17 +26,19 @@ public class Calculator extends HttpServlet {
 
             String result = "";
             if ("add".equals(operation)) {
-                result = "Addition Result: " + addFucn(a1, a2);
+                result = String.valueOf(addFucn(a1, a2));
             } else if ("sub".equals(operation)) {
-                result = "Subtraction Result: " + subFucn(a1, a2);
+                result = String.valueOf(subFucn(a1, a2));
             } else if ("mul".equals(operation)) {
-                result = "Multiplication Result: " + mulFucn(a1, a2);
+                result = String.valueOf(mulFucn(a1, a2));
             } else {
-                result = "No valid operation selected.";
+                result = "";
             }
 
-            // Store result in request scope
+            // Store result and inputs
             request.setAttribute("calcResult", result);
+            request.setAttribute("n1", a1);
+            request.setAttribute("n2", a2);
 
             // Forward to index.jsp
             RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
