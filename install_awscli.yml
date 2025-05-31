@@ -16,4 +16,4 @@
         dest: /tmp/
         remote_src: yes
     - name: Install AWS CLI
-      command: sudo ./aws/install chdir=/tmp
+      command: sudo ./aws/install --update
