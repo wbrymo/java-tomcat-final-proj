@@ -1,25 +1,14 @@
-- name: Install AWS CLI
-  hosts: localhost
-  connection: local
-  become: yes
-  tasks:
-    - name: Install unzip
-      package:
-        name: unzip
-        state: present
+- name: Check if AWS CLI is installed
+  shell: aws --version
+  register: aws_check
+  ignore_errors: yes
 
-    - name: Download AWS CLI
-      get_url:
-        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-        dest: "/tmp/awscliv2.zip"
-
-    - name: Unzip AWS CLI
-      unarchive:
-        src: "/tmp/awscliv2.zip"
-        dest: "/tmp"
-        remote_src: yes
-
-    - name: Install AWS CLI (with update flag)
-      command: "sudo ./aws/install --update"
-      args:
-        chdir: "/tmp"
+- name: Install or update AWS CLI
+  shell: |
+    if [ "{{ aws_check.rc }}" == "0" ]; then
+      echo "AWS CLI found. Running update..."
+      sudo /home/ec2-user/aws/install --update
+    else
+      echo "AWS CLI not found. Installing..."
+      sudo /home/ec2-user/aws/install
+    fi
