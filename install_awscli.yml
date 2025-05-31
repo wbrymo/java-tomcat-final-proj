@@ -15,5 +15,5 @@
         src: /tmp/awscliv2.zip
         dest: /tmp/
         remote_src: yes
-    - name: Install AWS CLI
-      command: sudo ./aws/install --update
+    - name: Install or Update AWS CLI
+      shell: sudo ./aws/install --update
