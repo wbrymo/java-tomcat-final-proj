@@ -1,0 +1,10 @@
+- name: Delete Kubernetes Cluster
+  hosts: all
+  become: yes
+  environment:
+    KOPS_STATE_STORE: s3://my-kops-cluster-state-bucket
+  tasks:
+    - name: Delete cluster
+      shell: |
+        export NAME=myk8scluster.example.com
+        kops delete cluster --name=$NAME --yes
