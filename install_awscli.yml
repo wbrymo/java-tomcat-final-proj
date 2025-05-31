@@ -3,22 +3,29 @@
   connection: local
   become: yes
   tasks:
-    - name: Ensure unzip is installed
-      yum:
+    - name: Install unzip
+      package:
         name: unzip
         state: present
 
-    - name: Download AWS CLI installer
+    - name: Download AWS CLI
       get_url:
-        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-        dest: /tmp/awscliv2.zip
-        mode: '0644'
+        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "/tmp/awscliv2.zip"
 
-    - name: Unzip AWS CLI installer
+    - name: Unzip AWS CLI
       unarchive:
-        src: /tmp/awscliv2.zip
-        dest: /tmp
+        src: "/tmp/awscliv2.zip"
+        dest: "/tmp"
         remote_src: yes
 
-    - name: Install or update AWS CLI
-      command: sudo /tmp/aws/install --update
+    - name: Check if AWS CLI is already installed
+      command: aws --version
+      register: aws_cli_check
+      ignore_errors: yes
+
+    - name: Install or Update AWS CLI if not installed or outdated
+      command: sudo ./install --update
+      args:
+        chdir: /tmp/aws
+      when: aws_cli_check.rc != 0
