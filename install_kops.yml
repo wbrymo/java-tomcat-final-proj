@@ -1,5 +1,5 @@
 - name: Install KOPS
-  hosts: all
+  hosts: localhost
   become: yes
   tasks:
     - name: Download KOPS
