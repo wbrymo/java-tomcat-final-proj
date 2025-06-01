@@ -1,14 +1,4 @@
-- name: Check if AWS CLI is installed
-  shell: aws --version
-  register: aws_check
-  ignore_errors: yes
+- name: Install AWS CLI
+  command: sudo ./aws/install --update
+  when: ansible_facts.packages['aws-cli'] is not defined
 
-- name: Install or update AWS CLI
-  shell: |
-    if [ "{{ aws_check.rc }}" == "0" ]; then
-      echo "AWS CLI found. Running update..."
-      sudo /home/ec2-user/aws/install --update
-    else
-      echo "AWS CLI not found. Installing..."
-      sudo /home/ec2-user/aws/install
-    fi
