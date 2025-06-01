@@ -1,17 +1,11 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: java-webappcal-ingress
-  namespace: my-app
-spec:
-  rules:
-  - host: javawebappcal.myk8scluster.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: java-webappcal-service
-            port:
-              number: 80
+rules:
+- host: javawebappcal.mycluster.k8s.local
+  http:
+    paths:
+    - path: /
+      pathType: Prefix
+      backend:
+        service:
+          name: java-webappcal-service
+          port:
+            number: 80
