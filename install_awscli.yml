@@ -1,4 +1,8 @@
-- name: Install AWS CLI
-  command: sudo ./aws/install --update
-  when: ansible_facts.packages['aws-cli'] is not defined
+- name: Check for existing AWS CLI installation
+  command: aws --version
+  register: aws_cli_check
+  ignore_errors: yes
 
+- name: Install AWS CLI if not present
+  command: sudo ./aws/install
+  when: aws_cli_check.rc != 0
