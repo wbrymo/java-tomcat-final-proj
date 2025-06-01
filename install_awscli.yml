@@ -19,10 +19,12 @@
         dest: /tmp
         remote_src: yes
 
-    - name: Install AWS CLI
-      command: /tmp/aws/install
+    - name: Install AWS CLI (with --update)
+      command: /tmp/aws/install --update
+      args:
+        chdir: /tmp
 
-    # Optional: Remove AWS CLI zip and extracted folder
+    # Optional: Clean up AWS CLI installation files
     - name: Clean up AWS CLI installation files
       file:
         path: "{{ item }}"
@@ -30,4 +32,3 @@
       loop:
         - /tmp/awscliv2.zip
         - /tmp/aws
-
