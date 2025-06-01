@@ -20,7 +20,7 @@
         remote_src: yes
 
     - name: Install AWS CLI (with --update)
-      command: /tmp/aws/install --update
+      command: ./aws/install --update
       args:
         chdir: /tmp
 
