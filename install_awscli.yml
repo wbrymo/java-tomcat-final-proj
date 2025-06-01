@@ -1,8 +1,5 @@
-- name: Check for existing AWS CLI installation
-  command: aws --version
-  register: aws_cli_check
-  ignore_errors: yes
+- name: Uninstall existing AWS CLI
+  shell: sudo rm -rf /usr/local/aws-cli
 
-- name: Install AWS CLI if not present
+- name: Install AWS CLI
   command: sudo ./aws/install
-  when: aws_cli_check.rc != 0
