@@ -1,5 +1,33 @@
-- name: Uninstall existing AWS CLI
-  shell: sudo rm -rf /usr/local/aws-cli
-
+---
 - name: Install AWS CLI
-  command: sudo ./aws/install
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install unzip
+      yum:
+        name: unzip
+        state: present
+
+    - name: Download AWS CLI zip file
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+
+    - name: Unzip AWS CLI installer
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install AWS CLI
+      command: /tmp/aws/install
+
+    # Optional: Remove AWS CLI zip and extracted folder
+    - name: Clean up AWS CLI installation files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/awscliv2.zip
+        - /tmp/aws
+
