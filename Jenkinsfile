@@ -1,44 +1,39 @@
 pipeline {
     agent any
+
     environment {
-        IMAGE_NAME = 'wbrymo/java-webappcal'   // New, unique image name
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Jenkins creds ID
+        DOCKER_IMAGE = "wbrymo/java-webappcal:${BUILD_NUMBER}"
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials') // Optional: Jenkins kubeconfig secret
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/project-1']],
-                    userRemoteConfigs: [[url: 'https://github.com/wbrymo/cee-final-proj.git']]])
+                git branch: 'project-3', url: 'https://github.com/wbrymo/cee-final-proj.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${IMAGE_NAME}:latest")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-login') {
-                        docker.image("${IMAGE_NAME}:latest").push()
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        def app = docker.build(DOCKER_IMAGE)
+                        app.push()
                     }
                 }
             }
         }
 
-        stage('Deploy Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                    # Stop and remove existing container if it exists
-                    docker rm -f calc-container || true
-
-                    # Run container with updated port mapping
-                    docker run -d --name calc-container -p 8081:8080 ${IMAGE_NAME}:latest
-                '''
+                withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    export KUBECONFIG=$KUBECONFIG
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                    '''
+                }
             }
         }
     }
@@ -46,9 +41,6 @@ pipeline {
     post {
         always {
             cleanWs()
-            // Print deployment clickable link
-            echo '🚀 Access the deployed Calculator app at:'
-            echo '🔗 http://54.162.69.67:8081/WebAppCal/'
         }
     }
 }
